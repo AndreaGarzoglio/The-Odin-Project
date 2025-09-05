@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let a= 7
+        let b= 5
+        function add7(a){
+            return a+=7
+        }
+
+        function multiply(a,b){
+            return a*b
+        }
+
+        function capitalize(str){
+            if (!str) return "";
+            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        }
+
+        function lastLetter(str) {
+            if (!str) return ""; 
+            return str.charAt(str.length - 1);
+        }
+
+
+
+
+        console.log(add7(a), multiply(a,b), capitalize("hElLo"), lastLetter("Hello"))
+
+    </script>
+</body>    
+
+
+    
