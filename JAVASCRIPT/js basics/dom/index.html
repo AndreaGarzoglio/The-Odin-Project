@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dom Elements</title>
+</head>
+<body>
+  <h1>THE TITLE OF YOUR WEBPAGE</h1>
+  <div id="container"></div>
+  <button onclick="alert('Hello World, first method!')">Click Me</button>
+
+  <button id="btn">Click Me Too</button>
+
+  <button id="btn2">Click Me Three!</button>
+
+
+
+  <script>
+    const container = document.querySelector("#container"); 
+    const content = document.createElement("div");
+    content.classList.add("content");
+    content.textContent = "This is the glorious text-content!";
+    container.appendChild(content);
+   
+    const red = document.createElement("p");
+    red.classList.add("red");
+    red.textContent = "Hey I'm red!";
+    red.style.color= "red";
+    container.appendChild(red);
+
+    const blue = document.createElement("h3");
+    blue.classList.add("blue");
+    blue.textContent = "I'm a blue h3!";
+    blue.style.color= "blue";
+    container.appendChild(blue);
+
+    const pinkDiv = document.createElement("div");
+    pinkDiv.classList.add("pinkDiv");
+    pinkDiv.style.backgroundColor= "pink";
+    pinkDiv.style.borderColor= "black";
+    pinkDiv.style.borderWidth= "5px"
+    pinkDiv.style.borderStyle = "solid";
+    const divHeader= document.createElement("h1")
+    divHeader.textContent= "I'm in a div"
+    pinkDiv.appendChild(divHeader);
+    const divP= document.createElement("p")
+    divP.textContent= "ME TOO!"
+    pinkDiv.appendChild(divP);
+    container.appendChild(pinkDiv);
+
+    const btn= document.querySelector("#btn");
+    btn.onclick= () => alert("Hello World, second method!");
+
+    const btn2= document.querySelector("#btn2");
+    btn2.addEventListener("click", ()=> {
+        alert("Hello World, third method!");
+    });
+
+  </script>
+</body>
+</html>

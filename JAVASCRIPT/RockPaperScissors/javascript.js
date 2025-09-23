@@ -11,7 +11,7 @@ function getComputerChoice(){
     }
 }
 
-
+/*
 function getHumanChoice() {
   let humanChoice = prompt("Make a choice! (Rock, Paper, or Scissors)");
   humanChoice = humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1).toLowerCase();
@@ -22,11 +22,58 @@ function getHumanChoice() {
     return "Invalid";
   }
 }
+*/
 
+let humanScore = 0;
+let computerScore= 0;
+const resultsDiv = document.getElementById("results");
 
+function playRound(humanChoice, computerChoice) {
+  let resultMessage= "";
+  if (humanChoice === computerChoice) {
+    resultMessage=`It's a tie! You both chose ${humanChoice}`;
+  } else if (
+    (humanChoice === "Rock" && computerChoice === "Scissors") ||
+    (humanChoice === "Paper" && computerChoice === "Rock") ||
+    (humanChoice === "Scissors" && computerChoice === "Paper")
+  ) {
+    resultMessage= `You win! ${humanChoice} beats ${computerChoice}`;
+    humanScore++;
+  } else {
+    resultMessage=`You lose... ${computerChoice} beats ${humanChoice}`;
+    computerScore++;
+  }
 
+  resultsDiv.innerHTML= `
+  <p>${resultMessage}</p>
+  <p>Score => Human: ${humanScore}, Computer: ${computerScore}</p>
+  `;
 
+    if (humanScore === 5 || computerScore === 5) {
+    gameOver = true;
+    let finalMessage =
+      humanScore === 5
+        ? "🎉 Congratulations, you win the game!"
+        : "🤖 Sorry, the computer wins the game!";
+    resultsDiv.innerHTML += `<p><strong>${finalMessage}</strong></p>`;
+  }
 
+}
+const rock= document.getElementById("rock");
+const paper= document.getElementById("paper");
+const scissors= document.getElementById("scissors");
+
+rock.addEventListener("click", ()=> {
+  playRound("Rock", getComputerChoice());
+});
+paper.addEventListener("click", ()=> {
+  playRound("Paper", getComputerChoice());
+});
+scissors.addEventListener("click", ()=> {
+  playRound("Scissors", getComputerChoice());
+});
+
+/*
 function playGame(){
     let humanScore= 0
     let computerScore= 0
@@ -44,6 +91,8 @@ function playGame(){
     }
     }
 
+    
+
     for (let i=1; i<=5; i++){
         console.log(`\nRound ${i}:`)
         const humanSelection = getHumanChoice();
@@ -51,6 +100,8 @@ function playGame(){
         playRound(humanSelection, computerSelection);
         console.log(`Human: ${humanScore}, Computer: ${computerScore}`);
     }
+    
+    
 
    console.log("\nFinal Result:");
       if (humanScore > computerScore) {
@@ -63,4 +114,6 @@ function playGame(){
 
 }
 
+
 playGame();
+*/
