@@ -1,0 +1,28 @@
+:root{
+    --pad-size: 960px;
+}
+
+body{
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem;
+}
+
+.controls{
+    margin-bottom: 1rem;
+}
+#container {
+    width: var(--pad-size);
+    height: var(--pad-size);
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.square {
+  box-sizing: border-box;
+  border: 1px solid #eee;
+}
