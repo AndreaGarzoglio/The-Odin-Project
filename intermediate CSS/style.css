@@ -1,0 +1,52 @@
+/* body {
+    font: 1.2em / 1.5 sans-serif;
+}
+
+Add styles here 
+h1 {
+    color: blue;
+}
+
+h2 {
+    color: white;
+    background-color: blue;
+}
+
+span{
+    font-size: 200%;
+}
+
+
+#special{
+    background-color: yellow;
+}
+.alert{
+    border: solid 2px gray;
+}
+
+.alert.stop{
+    background-color: red;
+}
+.alert.go{
+    background-color: green;
+}
+    */
+
+body {
+    font: 1.2em / 1.5 sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+table {
+    border-collapse: collapse;
+    width: 300px;
+}
+
+td,
+th {
+    padding: 0.2em;
+    text-align: left;
+}
