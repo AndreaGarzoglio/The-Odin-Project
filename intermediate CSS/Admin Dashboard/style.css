@@ -1,0 +1,472 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+}
+
+.roboto-main {
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+/*GENERAL*/
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+
+    font-family: "Roboto", sans-serif;
+    color: white;
+    background: linear-gradient(to bottom, rgb(37, 20, 46), rgb(4, 0, 5));
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 5fr;
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+}
+
+li {
+    list-style-type: none;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    all: unset;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    transform: scale(1.05);
+    background-color: #e799ff;
+}
+
+svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: rgb(164, 38, 214);
+}
+
+form[role="search"] button svg,
+.notifications svg {
+    fill: #66ccff;
+}
+
+@media (max-width: 1000px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+    }
+
+    #sidebar {
+        grid-area: 1 / 1 / 2 / 2;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    #header {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    #main {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .announcements,
+    .trending {
+        max-height: none;
+        overflow: visible;
+    }
+}
+
+/*SIDEBAR*/
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    grid-area: 1 / 1 / 3 / 2;
+    background: linear-gradient(to bottom, rgb(176, 44, 236), rgb(31, 8, 44));
+    gap: 3rem;
+    padding: 2rem;
+}
+
+.dashboard {
+    font-size: 2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 0.8rem;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.menuItem {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.leftIcon {
+    width: 3rem;
+    height: 3rem;
+    fill: white;
+}
+
+.leftMenuIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: white;
+}
+
+/*HEADER*/
+
+#header {
+    display: grid;
+    grid-area: 1 / 2 / 2 / 3;
+    background: linear-gradient(to bottom, rgb(46, 23, 56), rgb(85, 42, 110));
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.281);
+}
+
+.upper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+form[role="search"] {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 60%;
+}
+
+#search {
+    flex: 1;
+    height: 1.5rem;
+    border-radius: 30px;
+    color: white;
+    border: none;
+    background-color: rgb(160, 129, 189);
+    padding: 0.5rem;
+    margin: 0;
+}
+
+form[role="search"] button svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    margin-top: 5px;
+}
+
+form[role="search"] button svg:hover {
+    fill: #99ddff;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    height: auto;
+}
+
+.notifications svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    margin-top: 5px;
+}
+
+.notifications svg:hover {
+    fill: #99ddff;
+}
+
+.mainProfile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 1.7rem;
+    font-weight: 700;
+    padding-right: 2rem;
+}
+
+.mainProfile svg {
+    width: 2.8rem;
+    height: 2.8rem;
+}
+
+.lower {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.greeting {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.greetingText {
+    display: flex;
+    flex-direction: column;
+}
+
+.greetingText span {
+    font-size: 1rem;
+    opacity: 0.8;
+    font-weight: 700;
+}
+
+
+.userName span {
+    font-size: 2.3rem;
+    font-weight: 900;
+}
+
+.greeting svg {
+    width: 3.3rem;
+    height: 3.3rem;
+}
+
+.actions {
+    display: flex;
+    gap: 3rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    padding-right: 2rem;
+}
+
+.actionsBtn {
+    background-color: #bf36ff;
+    border-radius: 100px;
+    text-align: center;
+    height: 2.4rem;
+    width: 5.3rem;
+}
+
+
+/*MAIN*/
+#main {
+    display: grid;
+    grid-area: 2 / 2 / 3 / 3;
+    grid-template-columns: 3fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 3rem;
+
+}
+
+.projects {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.projects-grid {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(320px, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 1.5rem;
+    overflow-y: auto;
+}
+
+.announcements,
+.trending {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+}
+
+.announcements-grid,
+.trending-grid {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sideContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    min-height: 0;
+}
+
+.projects h2,
+.announcements h2,
+.trending h2 {
+    color: #66ccff;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+/*PROJECTS*/
+
+
+.project {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: rgba(113, 90, 134, 0.404);
+    border-radius: 10px;
+    position: relative;
+    padding-top: 1.2rem;
+    padding-right: 1.2rem;
+    padding-bottom: 1.2rem;
+    padding-left: 1.8rem;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.281);
+}
+
+
+
+.proActions {
+    margin-top: auto;
+    display: flex;
+    justify-content: end;
+    gap: 1rem;
+}
+
+.proActions svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: #66ccff;
+}
+
+.proActions svg:hover {
+    fill: #99ddff;
+}
+
+.project::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 100%;
+    background-color: rgb(174, 43, 226);
+    border-radius: 10px 0 0 10px;
+}
+
+
+/*ANNOUNCEMENTS*/
+
+
+.announcements-grid {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: rgba(113, 90, 134, 0.404);
+    border-radius: 10px;
+    position: relative;
+    padding: 1.2rem;
+    font-size: small;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.281);
+    height: 100%;
+}
+
+.announcement p {
+    flex: 1 1 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.announcement {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgb(174, 43, 226);
+    height: 100%;
+}
+
+.announcement:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/*TRENDING*/
+
+
+
+.trending-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background-color: rgba(113, 90, 134, 0.404);
+    border-radius: 10px;
+    position: relative;
+    padding: 2rem;
+    font-size: small;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.281);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile svg {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.profileText {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.profileText span {
+    font-weight: 700;
+}
+
+.profileText p {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
