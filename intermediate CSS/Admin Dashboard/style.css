@@ -128,7 +128,7 @@ form[role="search"] button svg,
     display: flex;
     flex-direction: column;
     gap: 3rem;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: 500;
 }
 
@@ -144,8 +144,8 @@ form[role="search"] button svg,
 }
 
 .leftMenuIcon {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.9rem;
+    height: 1.9rem;
     fill: white;
 }
 
@@ -325,6 +325,7 @@ form[role="search"] button svg:hover {
     min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 }
 
 .sideContent {
@@ -332,6 +333,7 @@ form[role="search"] button svg:hover {
     flex-direction: column;
     gap: 2rem;
     min-height: 0;
+    height: 100%;
 }
 
 .projects h2,
@@ -436,13 +438,14 @@ form[role="search"] button svg:hover {
 .trending-grid {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
     background-color: rgba(113, 90, 134, 0.404);
     border-radius: 10px;
     position: relative;
-    padding: 2rem;
+    padding: 1.5rem;
     font-size: small;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.281);
+    height: 100%;
 }
 
 .profile {
