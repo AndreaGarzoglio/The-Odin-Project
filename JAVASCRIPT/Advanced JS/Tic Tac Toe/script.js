@@ -1,54 +1,165 @@
-/*
-    JavaScript Compendium (quick reference + basic syntax)
+// Gameboard Module
 
-    Core concepts
-    - Scope: where a variable is accessible.
-        Syntax: const x = 1; { const y = 2; }
-    - Closure: a function keeping access to outer variables after it returns.
-        Syntax: const make = () => { let n = 0; return () => ++n; };
-    - Encapsulation: hiding internal state behind a public API.
-        Syntax: const api = (() => { let secret = 1; return { get: () => secret }; })();
-    - Immutable vs mutable: whether a value can change in place.
-        Syntax: const a = [1]; a.push(2); // mutable
-                        const b = 'hi'; const c = b + '!'; // immutable
+const Gameboard = (() => {
+    let board = Array(9).fill("");
+    const getBoard = () => board;
+    const placeMarks = (index, mark) => {
+        if (board[index] !== "") {
+            return false;
+        }
+        board[index] = mark;
+        return true;
+    };
 
-    Functions
-    - Factory function: returns an object without using `new`.
-        Syntax: const player = (name, mark) => ({ name, mark });
-    - Higher-order function: takes/returns functions.
-        Syntax: const twice = fn => x => fn(fn(x));
-    - Callback: a function passed to another function.
-        Syntax: [1, 2].forEach(n => console.log(n));
+    const reset = () => {
+        board.fill("");
+    };
 
-    Modules
-    - Module pattern (IIFE): private state + returned public methods.
-        Syntax: const Mod = (() => { let v = 0; return { inc: () => ++v }; })();
-    - Revealing module: define functions first, then return them.
-        Syntax: const Mod2 = (() => { const a = () => 1; return { a }; })();
-    - Singleton: a module creates one shared instance.
-        Syntax: const Settings = (() => { const get = () => 'v1'; return { get }; })();
+    return { getBoard, placeMarks, reset };
+})();
 
-    Data structures
-    - Array: ordered list, great for the 3x3 board.
-        Syntax: const board = Array(9).fill('');
-    - Object: key/value container, good for players or config.
-        Syntax: const player = { name: 'Alex', mark: 'X' };
+// Player Module
 
-    DOM & events
-    - DOM: the page representation you can query and update.
-        Syntax: const cell = document.querySelector('.cell');
-    - Event listener: function that runs on user actions (clicks).
-        Syntax: cell.addEventListener('click', () => console.log('click'));
-    - Event delegation: one listener on a parent to handle children.
-        Syntax: grid.addEventListener('click', e => e.target.matches('.cell'));
+const Player = (name, mark) => {
+    return { name, mark };
+};
 
-    Tic Tac Toe logic
-    - Game state: board array + current player + game over flag.
-        Syntax: let board = Array(9).fill(''); let current = 'X'; let over = false;
-    - Render: update the UI from the current state.
-        Syntax: cells[i].textContent = board[i];
-    - Win check: compare board against all winning combos.
-        Syntax: const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    - Tie: board full with no winner.
-        Syntax: const tie = board.every(cell => cell !== '');
-*/
+// Game Controller Module
+
+const GameController = (() => {
+    let currentPlayer;
+    let playerX;
+    let playerO;
+
+    const initGame = (name1, name2) => {
+        playerX = Player(name1, "X");
+        playerO = Player(name2, "O");
+        currentPlayer = playerX;
+        Gameboard.reset();
+    };
+
+    const getCurrentPlayer = () => currentPlayer;
+
+    const playRound = (index) => {
+        const validMove = Gameboard.placeMarks(index, currentPlayer.mark);
+        if (!validMove) {
+            return;
+        }
+        if (checkWin()) {
+            DisplayController.updateStatus(`${currentPlayer.name} wins!`);
+            return;
+        }
+        if (checkTie()) {
+            DisplayController.updateStatus("It's a tie!");
+            return;
+        }
+        currentPlayer = currentPlayer === playerX ? playerO : playerX;
+        DisplayController.updateStatus(`${currentPlayer.name}'s turn`);
+
+    };
+
+    const checkWin = () => {
+        const winningCombinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],  // rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],  // columns
+            [0, 4, 8], [2, 4, 6]              // diagonals
+        ];
+        const board = Gameboard.getBoard();
+        for (let i = 0; i < winningCombinations.length; i++) {
+            const [a, b, c] = winningCombinations[i];
+            if (board[a] === currentPlayer.mark && board[b] === currentPlayer.mark && board[c] === currentPlayer.mark) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    const checkTie = () => {
+        const board = Gameboard.getBoard();
+        if (board.every(cell => cell !== "") && !checkWin()) {
+            return true;
+        }
+        return false;
+    };
+
+    const reset = () => {
+        Gameboard.reset();
+        currentPlayer = playerX;
+    };
+
+    return { playRound, checkWin, checkTie, reset, initGame, getCurrentPlayer };
+})();
+
+// Display Controller
+
+const DisplayController = (() => {
+    const cells = document.querySelectorAll('.cell');
+    const statusDisplay = document.querySelector('#status');
+    const board = document.querySelector('.board');
+
+    const render = () => {
+        const gameBoard = Gameboard.getBoard();
+        cells.forEach((cell, index) => {
+            cell.textContent = gameBoard[index];
+            cell.classList.remove('x', 'o');
+            if (gameBoard[index] === 'X') {
+                cell.classList.add('x');
+            } else if (gameBoard[index] === 'O') {
+                cell.classList.add('o');
+            }
+        });
+        updateBoardGlow();
+    };
+
+    const updateBoardGlow = () => {
+        board.classList.remove('x-turn', 'o-turn');
+        const currentPlayer = GameController.getCurrentPlayer();
+        if (currentPlayer.mark === 'X') {
+            board.classList.add('x-turn');
+        } else {
+            board.classList.add('o-turn');
+        }
+    };
+
+    const updateStatus = (message) => {
+        statusDisplay.textContent = message;
+    };
+
+    const init = () => {
+        cells.forEach((cell, index) => {
+            cell.addEventListener('click', () => {
+                GameController.playRound(index);
+                render();
+            });
+        });
+    };
+
+    return { render, updateStatus, init };
+})();
+
+// Initialize the game
+const playerSetupDiv = document.getElementById('player-setup');
+const gameContainerDiv = document.getElementById('game-container');
+const startBtn = document.getElementById('start-btn');
+const resetBtn = document.getElementById('reset-btn');
+
+startBtn.addEventListener('click', () => {
+    const player1Name = document.getElementById('player1-name').value || 'Player 1';
+    const player2Name = document.getElementById('player2-name').value || 'Player 2';
+
+    GameController.initGame(player1Name, player2Name);
+
+    playerSetupDiv.style.display = 'none';
+    gameContainerDiv.style.display = 'flex';
+
+    DisplayController.init();
+    DisplayController.render();
+    DisplayController.updateStatus(`${GameController.getCurrentPlayer().name}'s turn`);
+});
+
+resetBtn.addEventListener('click', () => {
+    GameController.reset();
+    DisplayController.render();
+    DisplayController.updateStatus(`${GameController.getCurrentPlayer().name}'s turn`);
+});
+
