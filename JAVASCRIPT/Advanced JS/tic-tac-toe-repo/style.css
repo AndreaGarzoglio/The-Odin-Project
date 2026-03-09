@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0c1021;
+    --bg-card: #0f172a;
+    --bg-surface: #101827;
+    --text-primary: #e6e7eb;
+    --text-secondary: #9da3b5;
+    --accent-red: #ef4444;
+    --accent-purple: #a855f7;
+    --accent-pink: #ec4899;
+    --hover-red: #dc2626;
+    --hover-purple: #9333ea;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(1200px at 20% 15%, rgba(168, 85, 247, 0.16), transparent 55%),
+        radial-gradient(900px at 80% 0%, rgba(59, 130, 246, 0.12), transparent 50%),
+        linear-gradient(180deg, #0d1326 0%, #0a0f1f 50%, #050712 100%);
+    font-family: 'Space Grotesk', 'Inter', 'Segoe UI', system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
+}
+
+.container {
+    text-align: center;
+    background: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(12, 18, 33, 0.95));
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    backdrop-filter: blur(10px);
+    max-width: 600px;
+    width: 100%;
+}
+
+h1 {
+    color: var(--text-primary);
+    background: linear-gradient(120deg, #ef4444 0%, #ec4899 50%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 32px;
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.3));
+    line-height: 1.2;
+}
+
+.player-setup {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 30px;
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.player-setup h2 {
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.input-group label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+}
+
+.input-group input {
+    padding: 14px;
+    font-size: 1rem;
+    border: 2px solid rgba(168, 85, 247, 0.3);
+    border-radius: 12px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-family: 'Space Grotesk', 'Inter', 'Segoe UI', system-ui, sans-serif;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    background: rgba(16, 24, 39, 0.8);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
+    transform: translateY(-2px);
+}
+
+#start-btn {
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(140deg, var(--accent-red), var(--accent-purple));
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 12px 32px rgba(239, 68, 68, 0.25);
+    letter-spacing: 0.01em;
+}
+
+#start-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(239, 68, 68, 0.35);
+    background: linear-gradient(140deg, var(--hover-red), var(--hover-purple));
+}
+
+#start-btn:active {
+    transform: translateY(-1px) scale(0.99);
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    animation: slideIn 0.4s ease;
+}
+
+.status-display {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    min-height: 2.5rem;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(168, 85, 247, 0.15));
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    letter-spacing: 0.01em;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 0 auto;
+    width: fit-content;
+    background: rgba(12, 18, 33, 0.5);
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(168, 85, 247, 0.15);
+}
+
+.cell {
+    background: linear-gradient(160deg, rgba(15, 23, 42, 0.8), rgba(16, 24, 39, 0.6));
+    border: 2px solid rgba(168, 85, 247, 0.2);
+    cursor: pointer;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    width: 100px;
+    height: 100px;
+    letter-spacing: 0.01em;
+}
+
+.cell:hover {
+    background: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(20, 30, 50, 0.8));
+    border-color: rgba(168, 85, 247, 0.4);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(168, 85, 247, 0.2);
+}
+
+.cell:active {
+    transform: translateY(-2px) scale(0.98);
+}
+
+.cell.x {
+    color: var(--accent-red);
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.cell.o {
+    color: var(--accent-purple);
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+.cell.x:hover,
+.cell.o:hover {
+    filter: brightness(1.2);
+}
+
+/* X Turn Glow */
+.board.x-turn .cell:hover {
+    box-shadow: 0 12px 24px rgba(239, 68, 68, 0.4), 0 0 20px rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.6);
+}
+
+/* O Turn Glow */
+.board.o-turn .cell:hover {
+    box-shadow: 0 12px 24px rgba(168, 85, 247, 0.4), 0 0 20px rgba(168, 85, 247, 0.3);
+    border-color: rgba(168, 85, 247, 0.6);
+}
+
+#reset-btn {
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(140deg, var(--accent-red), var(--accent-purple));
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 12px 32px rgba(239, 68, 68, 0.25);
+    margin-top: 0;
+    letter-spacing: 0.01em;
+}
+
+#reset-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(239, 68, 68, 0.35);
+    background: linear-gradient(140deg, var(--hover-red), var(--hover-purple));
+}
+
+#reset-btn:active {
+    transform: translateY(-1px) scale(0.99);
+}
