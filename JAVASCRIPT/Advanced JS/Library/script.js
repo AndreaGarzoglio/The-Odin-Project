@@ -1,219 +1,224 @@
 // ============================================
-// DATA & STATE
+// SHOW CLASS
 // ============================================
-let myWatchlist = [];
-let editingShowId = null;
-
-// ============================================
-// CONSTRUCTOR
-// ============================================
-function Show(title, seasons, rating, image, status, color, description) {
-    this.id = crypto.randomUUID();
-    this.title = title;
-    this.seasons = seasons;
-    this.rating = rating;
-    this.image = image;
-    this.status = status || 'not watched yet';
-    this.color = color || '#a855f7';
-    this.description = description || '';
-}
-
-// ============================================
-// HELPER FUNCTIONS
-// ============================================
-function getFormValues() {
-    return {
-        title: document.getElementById("showName").value,
-        seasons: document.getElementById("showSeasons").value,
-        rating: document.getElementById("showRating").value,
-        imageFile: document.getElementById("showImg").files[0],
-        status: document.getElementById("showStatus").value,
-        color: document.getElementById("showColor").value || '#a855f7',
-        description: document.getElementById("showDescription").value
-    };
-}
-
-function toggleModal(show) {
-    const overlay = document.getElementById("modalOverlay");
-    const container = document.getElementById("modalContainer");
-    overlay.style.display = show ? "block" : "none";
-    container.style.display = show ? "block" : "none";
-}
-
-function resetForm() {
-    editingShowId = null;
-    document.getElementById("showForm").reset();
-}
-
-// ============================================
-// SHOW OPERATIONS
-// ============================================
-function addShowToWatchlist() {
-    const { title, seasons, rating, imageFile, status, color, description } = getFormValues();
-
-    if (editingShowId) {
-        updateShow(editingShowId, { title, seasons, rating, imageFile, status, color, description });
-    } else {
-        createShow({ title, seasons, rating, imageFile, status, color, description });
+class Show {
+    constructor(title, seasons, rating, watched = false) {
+        this.id = crypto.randomUUID();
+        this.title = title;
+        this.seasons = seasons;
+        this.rating = rating;
+        this.watched = watched;
     }
 
-    resetForm();
-    displayShows();
+    toggleWatchedStatus() {
+        this.watched = !this.watched;
+    }
 }
 
-function createShow({ title, seasons, rating, imageFile, status, color, description }) {
-    const imageUrl = imageFile ? URL.createObjectURL(imageFile) : null;
-    const show = new Show(title, seasons, rating, imageUrl, status, color, description);
-    myWatchlist.push(show);
-}
+// ============================================
+// WATCHLIST CLASS
+// ============================================
+class Watchlist {
+    constructor() {
+        this.shows = [];
+    }
 
-function updateShow(id, { title, seasons, rating, imageFile, status, color, description }) {
-    const show = myWatchlist.find(s => s.id === id);
-    if (!show) return;
+    addShow({ title, seasons, rating, watched, advancedData }) {
+        const show = new Show(title, seasons, rating, watched);
 
-    show.title = title;
-    show.seasons = seasons;
-    show.rating = rating;
-    show.status = status || show.status;
-    show.color = color || show.color;
-    show.description = description || show.description;
-
-    if (imageFile) {
-        if (show.image?.startsWith("blob:")) {
-            URL.revokeObjectURL(show.image);
+        if (typeof window.applyAdvancedDataToShow === 'function') {
+            window.applyAdvancedDataToShow(show, advancedData);
         }
-        show.image = URL.createObjectURL(imageFile);
+
+        this.shows.push(show);
     }
 
-    editingShowId = null;
-}
+    removeShow(id) {
+        const index = this.shows.findIndex((show) => show.id === id);
+        if (index === -1) return;
 
-function deleteShow(id) {
-    const show = myWatchlist.find(s => s.id === id);
-    if (show?.image?.startsWith("blob:")) {
-        URL.revokeObjectURL(show.image);
-    }
-    myWatchlist = myWatchlist.filter(s => s.id !== id);
-    displayShows();
-}
+        const [removedShow] = this.shows.splice(index, 1);
 
-function toggleWatched(id) {
-    const show = myWatchlist.find(s => s.id === id);
-    if (show) {
-        show.status = nextStatus(show.status);
-        displayShows();
-    }
-}
-
-function editShow(id) {
-    const show = myWatchlist.find(s => s.id === id);
-    if (!show) return;
-
-    editingShowId = id;
-
-    document.getElementById("showName").value = show.title;
-    document.getElementById("showSeasons").value = show.seasons;
-    document.getElementById("showRating").value = show.rating;
-    document.getElementById("showStatus").value = show.status || 'not watched yet';
-    document.getElementById("showColor").value = show.color || '#a855f7';
-    document.getElementById("showDescription").value = show.description || '';
-
-    toggleModal(true);
-}
-
-// ============================================
-// DISPLAY
-// ============================================
-function displayShows() {
-    const container = document.getElementById("shows");
-    container.innerHTML = "";
-
-    myWatchlist.forEach(show => {
-        const card = document.createElement("div");
-        const imageUrl = show.image || 'https://via.placeholder.com/200';
-
-        card.innerHTML = `
-            <div class="show" data-show-id="${show.id}" style="--bg-image: url('${imageUrl}')">
-                <div class="show-info">
-                    <h2 class="show-title">${show.title}</h2>
-                    <p class="show-description">${show.description || ''}</p>
-                    <p class="show-seasons">Seasons: ${show.seasons}</p>
-                    <p class="show-rating">Rating: ${show.rating}</p>
-                </div>
-                <div class="show-actions">
-                    <button class="toggleWatchedBtn" onclick="toggleWatched('${show.id}')" aria-label="Cycle status">
-                        ${formatStatus(show.status)}
-                    </button>
-                    <button class="editBtn" onclick="editShow('${show.id}')">Edit</button>
-                    <button class="deleteBtn" onclick="deleteShow('${show.id}')">Delete</button>
-                </div>
-            </div>
-        `;
-        container.appendChild(card);
-
-        const showCard = card.querySelector('.show');
-        const borderColor = show.color || '#a855f7';
-        // Apply image background with gradient fade to card background
-        showCard.style.borderColor = borderColor;
-        showCard.style.boxShadow = `0 8px 28px ${borderColor}66`;
-
-        // Apply border color to title
-        const titleEl = card.querySelector('.show-title');
-        titleEl.style.color = borderColor;
-
-        // Apply status-based color to status button
-        const statusBtn = card.querySelector('.toggleWatchedBtn');
-        let statusColor;
-        if (show.status === 'watched') {
-            statusColor = '#10b981'; // Green
-        } else if (show.status === 'watching') {
-            statusColor = '#f59e0b'; // Amber/Orange
-        } else {
-            statusColor = '#6b7280'; // Gray
+        if (typeof window.cleanupAdvancedShowData === 'function') {
+            window.cleanupAdvancedShowData(removedShow);
         }
-        statusBtn.style.background = `linear-gradient(140deg, ${statusColor}, ${statusColor}dd)`;
-        statusBtn.style.boxShadow = `0 8px 22px ${statusColor}44`;
-    });
-}
+    }
 
-function formatStatus(status) {
-    if (!status) return 'Not watched yet';
-    if (status === 'watching') return 'Watching';
-    if (status === 'watched') return 'Watched';
-    return 'Not watched yet';
-}
+    toggleShowStatus(id) {
+        const show = this.shows.find((item) => item.id === id);
+        if (!show) return;
 
-function nextStatus(current) {
-    if (current === 'not watched yet') return 'watching';
-    if (current === 'watching') return 'watched';
-    return 'not watched yet';
+        if (typeof window.toggleAdvancedWatchedStatus === 'function') {
+            const handled = window.toggleAdvancedWatchedStatus(show);
+            if (!handled) show.toggleWatchedStatus();
+            return;
+        }
+
+        show.toggleWatchedStatus();
+    }
 }
 
 // ============================================
-// EVENT LISTENERS
+// UI CLASS
 // ============================================
-document.getElementById("showForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    addShowToWatchlist();
-    toggleModal(false);
-});
+class WatchlistUI {
+    constructor(watchlist) {
+        this.watchlist = watchlist;
+        this.form = document.getElementById('showForm');
+        this.showsContainer = document.getElementById('shows');
+        this.addBtn = document.querySelector('.addBtn');
+        this.cancelBtn = document.querySelector('.cancelBtn');
+        this.modalOverlay = document.getElementById('modalOverlay');
+        this.modalContainer = document.getElementById('modalContainer');
+        this.formFields = {
+            title: document.getElementById('showName'),
+            seasons: document.getElementById('showSeasons'),
+            rating: document.getElementById('showRating'),
+            status: document.getElementById('showStatus'),
+            color: document.getElementById('showColor'),
+            description: document.getElementById('showDescription'),
+            image: document.getElementById('showImg')
+        };
 
-document.querySelector(".addBtn").addEventListener("click", () => {
-    resetForm();
-    toggleModal(true);
-});
+        this.setupEvents();
+    }
 
-document.querySelector(".cancelBtn")?.addEventListener("click", () => {
-    resetForm();
-    toggleModal(false);
-});
+    setupEvents() {
+        this.form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            this.watchlist.addShow(this.getFormData());
+            this.form.reset();
+            this.toggleModal(false);
+            this.render();
+        });
+
+        this.addBtn.addEventListener('click', () => {
+            this.form.reset();
+            this.toggleModal(true);
+        });
+
+        this.cancelBtn?.addEventListener('click', () => {
+            this.form.reset();
+            this.toggleModal(false);
+        });
+
+        this.showsContainer.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) return;
+
+            const action = target.dataset.action;
+            const id = target.dataset.showId;
+            if (!action || !id) return;
+
+            if (action === 'toggle') this.watchlist.toggleShowStatus(id);
+            if (action === 'delete') this.watchlist.removeShow(id);
+
+            this.render();
+        });
+    }
+
+    toggleModal(show) {
+        this.modalOverlay.style.display = show ? 'block' : 'none';
+        this.modalContainer.style.display = show ? 'block' : 'none';
+    }
+
+    getWatchedLabel(show) {
+        if (typeof window.getAdvancedWatchedLabel === 'function') {
+            return window.getAdvancedWatchedLabel(show);
+        }
+        return show.watched ? 'Watched' : 'Not watched yet';
+    }
+
+    getFormData() {
+        const advancedData =
+            typeof window.getAdvancedFormData === 'function'
+                ? window.getAdvancedFormData(this.formFields)
+                : {};
+
+        return {
+            title: this.formFields.title.value.trim(),
+            seasons: this.formFields.seasons.value,
+            rating: this.formFields.rating.value,
+            watched: this.formFields.status.value === 'watched',
+            advancedData
+        };
+    }
+
+    render() {
+        this.showsContainer.innerHTML = '';
+
+        this.watchlist.shows.forEach((show) => {
+            const card = document.createElement('div');
+
+            card.innerHTML = `
+                <div class="show" data-show-id="${show.id}">
+                    <div class="show-info">
+                        <h2 class="show-title">${show.title}</h2>
+                        <p class="show-seasons">Seasons: ${show.seasons}</p>
+                        <p class="show-rating">Rating: ${show.rating}</p>
+                        ${typeof window.renderAdvancedInfo === 'function' ? window.renderAdvancedInfo(show) : ''}
+                    </div>
+                    <div class="show-actions">
+                        <button class="toggleWatchedBtn" data-action="toggle" data-show-id="${show.id}">
+                            ${this.getWatchedLabel(show)}
+                        </button>
+                        <button class="deleteBtn" data-action="delete" data-show-id="${show.id}">Delete</button>
+                    </div>
+                </div>
+            `;
+
+            this.showsContainer.appendChild(card);
+
+            if (typeof window.applyAdvancedCardStyles === 'function') {
+                window.applyAdvancedCardStyles(card, show);
+            }
+        });
+    }
+}
 
 // ============================================
 // INITIALIZATION
 // ============================================
-const testShow = new Show("Breaking Bad", 5, 9.5, "./imgs/BB.jpg", 'watched', '#10b981', 'A chemistry teacher turned meth kingpin battles rivals and himself.');
-const testShow2 = new Show("Better Call Saul", 6, 9.1, "./imgs/BCS.jpg", 'watching', '#f97316', 'The origin story of criminal lawyer Saul Goodman.');
-const testShow3 = new Show("Brooklyn Nine-Nine", 8, 8.4, "./imgs/B99.jpg", 'not watched yet', '#22d3ee', 'A talented detective and his diverse crew solve crimes with humor.');
-myWatchlist.push(testShow, testShow2, testShow3);
+const watchlist = new Watchlist();
+const ui = new WatchlistUI(watchlist);
 
-displayShows();
+watchlist.addShow({
+    title: 'Breaking Bad',
+    seasons: 5,
+    rating: 9.5,
+    watched: true,
+    advancedData: {
+        status: 'watched',
+        color: '#10b981',
+        description: 'A chemistry teacher turned meth kingpin battles rivals and himself.',
+        image: './imgs/BB.jpg'
+    }
+});
+
+watchlist.addShow({
+    title: 'Better Call Saul',
+    seasons: 6,
+    rating: 9.1,
+    watched: false,
+    advancedData: {
+        status: 'watching',
+        color: '#f97316',
+        description: 'The origin story of criminal lawyer Saul Goodman.',
+        image: './imgs/BCS.jpg'
+    }
+});
+
+watchlist.addShow({
+    title: 'Brooklyn Nine-Nine',
+    seasons: 8,
+    rating: 8.4,
+    watched: false,
+    advancedData: {
+        status: 'not watched yet',
+        color: '#22d3ee',
+        description: 'A talented detective and his diverse crew solve crimes with humor.',
+        image: './imgs/B99.jpg'
+    }
+});
+
+ui.render();
