@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather Report</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="index.js" defer></script>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>Weather Report</h1>
+      <div class="controls">
+        <form id="searchForm" class="search-form">
+          <input type="text" id="locationInput" placeholder="Enter city name..." autocomplete="off" required>
+          <button type="submit">Search</button>
+        </form>
+        <button id="toggleTemp" class="temp-toggle">°C / °F</button>
+      </div>
+    </header>
+
+    <!-- Loading Indicator -->
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Loading weather data...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage" class="error-message hidden"></div>
+
+    <!-- Current Weather Display -->
+    <section id="currentWeather" class="weather-section hidden">
+      <div class="weather-main">
+        <div class="weather-image">
+          <div id="weatherIcon"></div>
+        </div>
+        <div class="weather-info">
+          <h2 id="location"></h2>
+          <div class="temperature">
+            <span id="temp"></span>
+          </div>
+          <p id="description"></p>
+          <div class="weather-details">
+            <p>Feels like: <span id="feelsLike"></span></p>
+            <p>Humidity: <span id="humidity"></span></p>
+            <p>Wind Speed: <span id="windSpeed"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Forecast Display -->
+    <section id="forecastSection" class="forecast-section hidden">
+      <h3>7-Day Forecast</h3>
+      <div id="forecast" class="forecast-grid"></div>
+    </section>
+  </div>
+</body>
+
+</html>
